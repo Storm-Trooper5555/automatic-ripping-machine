@@ -1,7 +1,7 @@
 """ffmpeg support
 
 Revision ID: 50d63e3650d2
-Revises: 95623e8c5d58
+Revises: 6870a5546912
 Create Date: 2025-05-30 14:53:00.173047
 
 """
@@ -11,7 +11,7 @@ import sqlalchemy as sa
 
 # revision identifiers, used by Alembic.
 revision = '50d63e3650d2'
-down_revision = '95623e8c5d58'
+down_revision = '6870a5546912'
 branch_labels = None
 depends_on = None
 
