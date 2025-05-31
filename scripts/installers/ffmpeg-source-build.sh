@@ -19,6 +19,17 @@ sudo apt install -y \
   yasm nasm libx264-dev libx265-dev libnuma-dev libvdpau-dev texinfo \
   libtool automake autoconf
 
+ sudo apt-get install -y \
+          libdrm-dev \
+          libegl1-mesa-dev \
+          libgl1-mesa-dev \
+          libx11-dev \
+          libx11-xcb-dev \
+          libxcb-dri3-dev \
+          libxext-dev \
+          libxfixes-dev \
+          libwayland-dev
+
 sudo apt install -y git cmake pkg-config meson libdrm-dev automake libtool
 # --------- Step 2: Build Intel Media Driver ----------
 echo "[2/4] Building Intel Media Driver from source..."
@@ -76,6 +87,7 @@ make -j"$NUM_CORES"
 make install
 
 # --------- Step 4: Done ----------
+mv $FFMPEG_INSTALL_DIR/bin/ffmpeg /usr/bin/ffmpeg
 echo "[4/4] Build completed!"
 echo "FFmpeg binary is located at:"
-echo "$FFMPEG_INSTALL_DIR/bin/ffmpeg"
+echo "usr/bin/ffmpeg"
