@@ -3,8 +3,8 @@ set -e
 
 # --------- CONFIG ---------
 NUM_CORES=$(($(nproc) - 1))
-INSTALL_DIR="$HOME/ffmpeg_build"
-FFMPEG_INSTALL_DIR="$INSTALL_DIR/install"
+INSTALL_DIR="./"
+FFMPEG_INSTALL_DIR="./"
 
 # --------- Step 1: Install Dependencies ----------
 echo "[1/4] Installing dependencies..."
@@ -19,11 +19,10 @@ sudo apt install -y \
   yasm nasm libx264-dev libx265-dev libnuma-dev libvdpau-dev texinfo \
   libtool automake autoconf
 
+sudo apt install -y git cmake pkg-config meson libdrm-dev automake libtool
 # --------- Step 2: Build Intel Media Driver ----------
 echo "[2/4] Building Intel Media Driver from source..."
 
-mkdir -p "$INSTALL_DIR"
-cd "$INSTALL_DIR"
 
 # Clone dependencies
 git clone https://github.com/intel/libva.git
@@ -32,28 +31,29 @@ git clone https://github.com/intel/media-driver.git
 
 # Build and install libva
 cd libva
-mkdir build && cd build
-cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release
-make -j"$NUM_CORES"
-sudo make install
+mkdir -p build 
+cd build 
+meson .. -Dprefix=/usr -Dlibdir=/usr/lib/x86_64-linux-gnu
+ninja
+sudo ninja install
 cd ../..
 
 # Build and install gmmlib
 cd gmmlib
-mkdir build && cd build
-cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release
+mkdir -p build && cd build
+cmake -DCMAKE_BUILD_TYPE=Release ..
 make -j"$NUM_CORES"
 sudo make install
 cd ../..
 
 # Build and install media-driver
 
-mkdir build_media
+mkdir -p build_media
 cd build_media
 cmake ../media-driver
 make -j"$NUM_CORES"
 sudo make install
-cd ../..
+cd ..
 
 # --------- Step 3: Build FFmpeg with VAAPI Support ----------
 echo "[3/4] Cloning and building FFmpeg..."
